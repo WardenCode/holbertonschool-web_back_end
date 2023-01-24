@@ -6,11 +6,12 @@ The code is nearly identical to wait_n except task_wait_random is being called.
 """
 
 import asyncio
+from typing import List
 
 task_wait_random = __import__('3-tasks').task_wait_random
 
 
-async def task_wait_n(n: int, max_delay: int) -> list[float]:
+async def task_wait_n(n: int, max_delay: int) -> List[float]:
     """
     Calls n times the function task_wait_random
 
@@ -19,10 +20,10 @@ async def task_wait_n(n: int, max_delay: int) -> list[float]:
         max_delay (int): Max delay to the calls to task_wait_random
 
     Returns:
-        list[float]: List of delays on each call to task_wait_random function
+        List[float]: List of delays on each call to task_wait_random function
     """
 
-    result: list[float] = await asyncio.gather(
+    result: List[float] = await asyncio.gather(
         *[task_wait_random(max_delay) for _ in range(n)]
     )
 

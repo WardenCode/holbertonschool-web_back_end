@@ -12,10 +12,12 @@ The list of the delays should be in ascending order without using sort()
 because of concurrency.
 """
 
+from typing import List
+
 wait_random = __import__('0-basic_async_syntax').wait_random
 
 
-async def wait_n(n: int, max_delay: int) -> list[float]:
+async def wait_n(n: int, max_delay: int) -> List[float]:
     """
     Calls n times the function wait_random
 
@@ -24,9 +26,9 @@ async def wait_n(n: int, max_delay: int) -> list[float]:
         max_delay (int): Max delay to the calls to wait_random
 
     Returns:
-        list[float]: List of delays on each call to wait_random function
+        List[float]: List of delays on each call to wait_random function
     """
 
-    result: list[float] = [await wait_random(max_delay) for _ in range(n)]
+    result: List[float] = [await wait_random(max_delay) for _ in range(n)]
 
     return (sorted(result))
