@@ -61,11 +61,9 @@ class Server:
                 next_index += 1
             current_idx += 1
 
-        data = {
+        return ({
             'index': index,
             'data': returned_data,
             'page_size': page_size,
             'next_index': next_index,
-        }
-
-        return data
+        })
