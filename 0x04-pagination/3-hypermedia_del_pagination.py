@@ -48,18 +48,18 @@ class Server:
         Returns:
             Dict: Data from index to index + page_size
         """
-        dataset = self.indexed_dataset()
-        assert (index <= len(dataset))
+        all_data = self.indexed_dataset()
+        assert (index <= len(all_data))
         next_index = index + page_size
         returned_data = []
-        current_idx = index
+        i = index
 
-        while current_idx < next_index:
-            if dataset.get(current_idx):
-                returned_data.append(dataset.get(current_idx))
+        while i < next_index:
+            if all_data.get(i):
+                returned_data.append(all_data.get(i))
             else:
                 next_index += 1
-            current_idx += 1
+            i += 1
 
         return ({
             'index': index,
