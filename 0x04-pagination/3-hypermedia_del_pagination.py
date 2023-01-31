@@ -51,19 +51,19 @@ class Server:
         all_data = self.indexed_dataset()
         assert (index <= len(all_data))
         next_index = index + page_size
-        returned_data = []
+        requested_data = []
         i = index
 
         while i < next_index:
             if all_data.get(i):
-                returned_data.append(all_data.get(i))
+                requested_data.append(all_data.get(i))
             else:
                 next_index += 1
             i += 1
 
         return ({
             'index': index,
-            'data': returned_data,
+            'data': requested_data,
             'page_size': page_size,
             'next_index': next_index,
         })
