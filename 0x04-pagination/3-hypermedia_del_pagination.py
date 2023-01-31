@@ -5,7 +5,7 @@ Deletion-resilient hypermedia pagination
 
 import csv
 import math
-from typing import Any, Dict, List, Optional
+from typing import Dict, List, Optional
 
 
 def rounded_binary_search(numbers: List[int], search: int) -> int:
@@ -25,7 +25,7 @@ def rounded_binary_search(numbers: List[int], search: int) -> int:
     idx: int = 0
 
     while (numbers[idx] != search):
-        idx = int((high - low) / 2) + low
+        idx = math.ceil((high - low) / 2) + low
 
         if (numbers[idx] == search):
             return (idx)
@@ -38,7 +38,7 @@ def rounded_binary_search(numbers: List[int], search: int) -> int:
         else:
             high = idx - 1
 
-    return (idx + 1)
+    return (idx)
 
 
 class Server:
@@ -86,7 +86,7 @@ class Server:
         """
         all_data = self.indexed_dataset()
         total_len = len(all_data)
-        assert isinstance(index, int) and 0 <= index <= total_len
+        assert isinstance(index, int) and 0 <= index < total_len
         ids = list(all_data.keys())
         requested_data = []
         last_idx = 0
