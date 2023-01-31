@@ -58,8 +58,8 @@ class Server:
             if dataset.get(current_idx):
                 returned_data.append(dataset.get(current_idx))
             else:
-                next_index -= -1
-            current_idx -= -1
+                next_index += 1
+            current_idx += 1
 
         data = {
             'index': index,
