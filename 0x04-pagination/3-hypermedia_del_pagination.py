@@ -52,7 +52,7 @@ class Server:
         """
         all_data = self.indexed_dataset()
         total_len = len(all_data)
-        assert isinstance(index, int) and 0 <= index < total_len
+        assert (index <= total_len)
         requested_data = []
         next_index = index + page_size
         i = index
