@@ -4,41 +4,7 @@ Deletion-resilient hypermedia pagination
 """
 
 import csv
-import math
 from typing import Dict, List, Optional
-
-
-def rounded_binary_search(numbers: List[int], search: int) -> int:
-    """
-    Search a number on array, if doesn't exist,
-    return the closest one
-
-    Args:
-        numbers (List[int]): List of ordered numbers
-        search (int): Number to search
-
-    Returns:
-        int: Index where is the number
-    """
-    high: int = len(numbers) - 1
-    low: int = 0
-    idx: int = 0
-
-    while (numbers[idx] != search):
-        idx = math.ceil((high - low) / 2) + low
-
-        if (numbers[idx] == search):
-            return (idx)
-
-        if (low == high):
-            break
-
-        if (numbers[idx] < search):
-            low = idx + 1
-        else:
-            high = idx - 1
-
-    return (idx)
 
 
 class Server:
@@ -87,21 +53,20 @@ class Server:
         all_data = self.indexed_dataset()
         total_len = len(all_data)
         assert isinstance(index, int) and 0 <= index < total_len
-        ids = list(all_data.keys())
         requested_data = []
-        last_idx = 0
+        next_index = index + page_size
+        i = index
 
-        closest_idx = rounded_binary_search(ids, index)
-
-        for i in range(closest_idx, closest_idx + page_size):
-            if (i > total_len):
-                break
-            requested_data.append(all_data[ids[i]])
-            last_idx = ids[i]
+        while i < next_index:
+            if all_data.get(i):
+                requested_data.append(all_data.get(i))
+            else:
+                next_index -= -1
+            i -= -1
 
         return ({
             "index": index,
             "data": requested_data,
-            "page_size": len(requested_data),
-            "next_index": last_idx + 1 if last_idx + 1 < total_len else None
+            "page_size": page_size,
+            "next_index": next_index
         })
