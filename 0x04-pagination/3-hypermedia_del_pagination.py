@@ -5,7 +5,7 @@ Deletion-resilient hypermedia pagination
 
 import csv
 import math
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 
 def index_range(page: int, page_size: int) -> Tuple[int, int]:
@@ -102,7 +102,7 @@ class Server:
             "total_pages": total_pages,
         })
 
-    def get_hyper_index(self, index: Optional[int] = None,
+    def get_hyper_index(self, index: int = None,
                         page_size: int = 10) -> Dict:
         """
         Get page size elements from index, regardless if any were deleted
