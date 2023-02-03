@@ -131,7 +131,7 @@ def main() -> None:
     for row in rows:
         msg = ''
         for k, v in zip(fields, row):
-            msg += '{}={};'.format(k, v)
+            msg += '{}={}; '.format(k, v)
         logger.info(msg)
 
     cursor.close()
