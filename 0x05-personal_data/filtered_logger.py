@@ -4,8 +4,8 @@ Logging data and hiding PII data from database
 """
 
 import logging
+import re
 from os import getenv
-from re import sub
 from typing import List, Tuple
 
 import mysql.connector
@@ -19,25 +19,24 @@ PII_FIELDS: Tuple[str, str, str, str, str] = (
 )
 
 
-def filter_datum(fields: List[str], redactions: str,
+def filter_datum(fields: List[str], redaction: str,
                  message: str, separator: str) -> str:
     """
     Obfuscate some fields of a string
 
     Args:
         fields (List[str]): Fields for obfuscate
-        redactions (str): Obfuscated chars
+        redaction (str): Obfuscated chars
         message (str): Message to obfuscate
         separator (str): Field separator on message
 
     Return:
         str -> A copy of the string obfuscated
     """
-    new_msg: str = message
     for field in fields:
-        new_msg = sub("{}=(.*?){}".format(field, separator), "{}={}{}"
-                      .format(field, redactions, separator), new_msg)
-    return new_msg
+        message = re.sub("{}=(.*?){}".format(field, separator), "{}={}{}"
+                         .format(field, redaction, separator), message)
+    return message
 
 
 def get_logger() -> logging.Logger:
@@ -64,14 +63,14 @@ def get_logger() -> logging.Logger:
 
 
 class RedactingFormatter(logging.Formatter):
-    """Redacting Formatter class"""
-
+    """ Redacting Formatter class
+    """
     REDACTION = "***"
     FORMAT = "[HOLBERTON] %(name)s %(levelname)s %(asctime)-15s: %(message)s"
     SEPARATOR = ";"
 
-    def __init__(self, fields: List[str]) -> None:
-        self.fields: List[str] = fields
+    def __init__(self, fields: List[str]):
+        self.fields = fields
         super(RedactingFormatter, self).__init__(self.FORMAT)
 
     def format(self, record: logging.LogRecord) -> str:
