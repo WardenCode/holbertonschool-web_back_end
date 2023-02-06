@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Module description
+Auth module for the application
 """
 
 from typing import List, TypeVar
@@ -10,21 +10,29 @@ from flask import request
 
 class Auth():
     """
-    _summary_
+    Auth class for the application
     """
 
     def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
         """
-        _summary_
+        Validate if the path require auth or not
 
         Args:
-            path (str): _description_
-            excluded_paths (List[str]): _description_
+            path (str): Path to test
+            excluded_paths (List[str]): Paths that doesn't need auth
 
         Returns:
-            bool: _description_
+            bool: True if the path is not in the list of strings excluded_paths,
+            False otherwise
         """
-        return (False)
+
+        if ((not path) or (not excluded_paths) or (not len(excluded_paths))):
+            return (True)
+
+        if (path[-1] != '/'):
+            path = path + '/'
+
+        return (path not in excluded_paths)
 
     def authorization_header(self, request=None) -> str:
         """
