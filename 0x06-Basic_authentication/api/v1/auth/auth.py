@@ -22,8 +22,8 @@ class Auth():
             excluded_paths (List[str]): Paths that doesn't need auth
 
         Returns:
-            bool: True if the path is not in the list of strings excluded_paths,
-            False otherwise
+            bool: True if the path is not in the list of strings
+            excluded_paths, False otherwise
         """
 
         if ((not path) or (not excluded_paths) or (not len(excluded_paths))):
