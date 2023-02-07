@@ -4,7 +4,6 @@ Basic Auth Module
 """
 
 from base64 import b64decode
-from sys import stderr
 from typing import TypeVar
 
 from api.v1.auth.auth import Auth
@@ -115,9 +114,9 @@ class BasicAuth(Auth):
         if ((not user_pwd) or (not isinstance(user_pwd, str))):
             return (None)
 
-        users = User.search({'email': user_email})
-
-        if (not users):
+        try:
+            users = User.search({"email": user_email})
+        except Exception:
             return (None)
 
         for user in users:
