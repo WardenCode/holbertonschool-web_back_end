@@ -36,15 +36,21 @@ class Auth():
 
     def authorization_header(self, request=None) -> str:
         """
-        _summary_
+        Validate and get if the authorization header exists
 
         Args:
-            request (_type_, optional): _description_. Defaults to None.
+            request (Dict[str, str], optional): HTTP Header Dict.
+            Defaults to None.
 
         Returns:
-            str: _description_
+            str: value of the header request Authorization or
+            None if not found
         """
-        return (None)
+
+        if (not request):
+            return (None)
+
+        return (request.headers.get("Authorization"))
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
