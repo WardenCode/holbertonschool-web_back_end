@@ -4,6 +4,7 @@ Basic Auth Module
 """
 
 from base64 import b64decode
+from sys import stderr
 
 from api.v1.auth.auth import Auth
 
@@ -61,3 +62,32 @@ class BasicAuth(Auth):
             return (b64decode(base64_authorization_header).decode('utf-8'))
         except Exception:
             return (None)
+
+    def extract_user_credentials(
+            self, decoded_base64_authorization_header: str) -> (str, str):
+        """
+        self descriptive
+
+        Args:
+            decoded_base64_authorization_header (str): info
+            of authorization header
+
+        Returns:
+            Tuple[str, str] | Tuple[None, None]: email and password
+            if exists, None otherwise
+        """
+
+        result = (None, None)
+
+        if (not decoded_base64_authorization_header):
+            return result
+
+        if (not isinstance(decoded_base64_authorization_header, str)):
+            return result
+
+        if (':' not in decoded_base64_authorization_header):
+            return result
+
+        result = tuple(decoded_base64_authorization_header.split(":"))
+
+        return result
