@@ -54,12 +54,12 @@ class Auth():
 
     def current_user(self, request=None) -> TypeVar('User'):
         """
-        _summary_
+        Nothing
 
         Args:
-            request (_type_, optional): _description_. Defaults to None.
+            request (Request, optional): Flask Request. Defaults to None.
 
         Returns:
-            Typevar('User'): __description__
+            Typevar('User'): User from Database or None
         """
         return (None)
