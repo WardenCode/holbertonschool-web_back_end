@@ -27,7 +27,7 @@ class BasicAuth(Auth):
             authorization_header (str): Value of authorization_header
 
         Returns:
-            str | Nonw: Base64 authorization header
+            str | None: Base64 authorization header
         """
 
         if (not authorization_header):
@@ -124,3 +124,45 @@ class BasicAuth(Auth):
                 return (user)
 
         return (None)
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """
+        Get the current User
+
+        Args:
+            request (Request, optional): Flask Request
+
+        Returns:
+            TypeVar('User'): The current User or None
+        """
+
+        user = None
+
+        if (not request):
+            return (user)
+
+        auth_value = self.authorization_header(request)
+
+        if (not auth_value):
+            return (user)
+
+        encoded_auth_header = self.extract_base64_authorization_header(
+            auth_value)
+
+        if (not encoded_auth_header):
+            return (user)
+
+        decoded_auth_header = self.decode_base64_authorization_header(
+            encoded_auth_header)
+
+        if (not decoded_auth_header):
+            return (user)
+
+        user_credentials = self.extract_user_credentials(decoded_auth_header)
+
+        if (user_credentials == (None, None)):
+            return (None)
+
+        user = self.user_object_from_credentials(*user_credentials)
+
+        return (user)
