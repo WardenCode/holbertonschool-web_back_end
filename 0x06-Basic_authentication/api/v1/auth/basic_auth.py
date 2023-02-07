@@ -4,6 +4,7 @@ Basic Auth Module
 """
 
 from base64 import b64decode
+from re import search
 from typing import TypeVar
 
 from api.v1.auth.auth import Auth
@@ -89,9 +90,10 @@ class BasicAuth(Auth):
         if (':' not in decoded_base64_authorization_header):
             return result
 
-        result = tuple(decoded_base64_authorization_header.split(":"))
+        regex_result = search(
+            r'^([^:]*):(.*)$', decoded_base64_authorization_header)
 
-        return result
+        return tuple(regex_result.groups())
 
     def user_object_from_credentials(
             self, user_email: str, user_pwd: str) -> TypeVar('User'):
