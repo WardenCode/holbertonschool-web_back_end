@@ -37,3 +37,21 @@ class SessionAuth(Auth):
         self.user_id_by_session_id[Base] = user_id
 
         return (Base)
+
+    def user_id_for_session_id(
+            self, session_id: Optional[str] = None) -> Optional[str]:
+        """
+        Retrieve a userID through sessionID
+
+        Args:
+            session_id (Optional[str], optional): SessionID
+            Defaults to None.
+
+        Returns:
+            Optional[str]: UserID that match with SessionID, None otherwise
+        """
+
+        if ((not isinstance(session_id, str)) or (not session_id)):
+            return (None)
+
+        return (self.user_id_by_session_id.get(session_id))
