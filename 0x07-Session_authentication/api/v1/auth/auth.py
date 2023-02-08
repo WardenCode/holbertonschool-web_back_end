@@ -6,8 +6,6 @@ Auth module for the application
 from os import getenv
 from typing import List, Optional
 
-from flask.wrappers import Request
-
 from models.user import User
 
 
@@ -42,8 +40,7 @@ class Auth():
 
         return (path not in excluded_paths)
 
-    def authorization_header(
-            self, request: Optional[Request] = None) -> Optional[str]:
+    def authorization_header(self, request=None) -> Optional[str]:
         """
         Validate and get if the authorization header exists
 
@@ -61,8 +58,7 @@ class Auth():
 
         return (request.headers.get("Authorization"))
 
-    def current_user(self,
-                     request: Optional[Request] = None) -> Optional[User]:
+    def current_user(self, request=None) -> User:
         """
         Nothing
 
@@ -74,8 +70,7 @@ class Auth():
         """
         return (None)
 
-    def session_cookie(self,
-                       request: Optional[Request] = None) -> Optional[str]:
+    def session_cookie(self, request=None) -> Optional[str]:
         """
         Retrieve the session cookie
 
