@@ -5,7 +5,7 @@ Basic Auth Module
 
 from base64 import b64decode
 from re import search
-from typing import TypeVar
+from typing import Tuple, TypeVar
 
 from api.v1.auth.auth import Auth
 from models.user import User
@@ -66,7 +66,7 @@ class BasicAuth(Auth):
             return (None)
 
     def extract_user_credentials(
-            self, decoded_base64_authorization_header: str) -> (str, str):
+            self, decoded_base64_authorization_header: str) -> Tuple[str, str]:
         """
         self descriptive
 
