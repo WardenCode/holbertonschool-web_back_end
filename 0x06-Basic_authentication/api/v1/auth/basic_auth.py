@@ -13,7 +13,7 @@ from models.user import User
 
 class BasicAuth(Auth):
     """
-    Empty class of a Basic Auth
+    Basic Auth class for the application
 
     Args:
         Auth (Auth): Main auth class
