@@ -4,6 +4,7 @@ Route module for the API
 """
 import os
 from os import getenv
+from typing import List, Tuple
 
 from flask import Flask, abort, jsonify, request
 from flask_cors import CORS, cross_origin
@@ -31,13 +32,19 @@ def interceptor():
     """ Validate auth before each request
     """
 
-    excluded = ['/api/v1/status/',
-                '/api/v1/unauthorized/', '/api/v1/forbidden/']
+    excluded: List[str] = ['/api/v1/status/',
+                           '/api/v1/unauthorized/',
+                           '/api/v1/forbidden/',
+                           '/api/v1/auth_session/login/']
 
     if ((not auth) or (not auth.require_auth(request.path, excluded))):
         return
 
-    if (not auth.authorization_header(request)):
+    # if (not auth.authorization_header(request)):
+    #     abort(401)
+
+    if ((not auth.authorization_header(request))
+            and (not auth.session_cookie(request))):
         abort(401)
 
     if (not auth.current_user(request)):
@@ -47,21 +54,21 @@ def interceptor():
 
 
 @app.errorhandler(404)
-def not_found(error) -> str:
+def not_found(error) -> Tuple[str, int]:
     """ Not found handler
     """
     return (jsonify({"error": "Not found"}), 404)
 
 
 @app.errorhandler(401)
-def unauthorized(error) -> str:
+def unauthorized(error) -> Tuple[str, int]:
     """ Unauthorized handler
     """
     return (jsonify({"error": "Unauthorized"}), 401)
 
 
 @app.errorhandler(403)
-def forbidden(error) -> str:
+def forbidden(error) -> Tuple[str, int]:
     """ Forbidden handler
     """
     return (jsonify({"error": "Forbidden"}), 403)
