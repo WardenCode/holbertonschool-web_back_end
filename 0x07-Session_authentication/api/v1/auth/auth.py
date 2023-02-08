@@ -3,7 +3,12 @@
 Auth module for the application
 """
 
-from typing import List, TypeVar
+from os import getenv
+from typing import List, Optional
+
+from flask.wrappers import Request
+
+from models.user import User
 
 
 class Auth():
@@ -11,13 +16,14 @@ class Auth():
     Auth class for the application
     """
 
-    def require_auth(self, path: str, excluded_paths: List[str]) -> bool:
+    def require_auth(self, path: Optional[str],
+                     excluded_paths: Optional[List[str]]) -> bool:
         """
         Validate if the path require auth or not
 
         Args:
-            path (str): Path to test
-            excluded_paths (List[str]): Paths that doesn't need auth
+            path (Optional[str]): Path to test
+            excluded_paths (Optional[List[str]]): Paths that doesn't need auth
 
         Returns:
             bool: True if the path is not in the list of strings
@@ -36,7 +42,8 @@ class Auth():
 
         return (path not in excluded_paths)
 
-    def authorization_header(self, request=None) -> str:
+    def authorization_header(
+            self, request: Optional[Request] = None) -> Optional[str]:
         """
         Validate and get if the authorization header exists
 
@@ -54,7 +61,8 @@ class Auth():
 
         return (request.headers.get("Authorization"))
 
-    def current_user(self, request=None) -> TypeVar('User'):
+    def current_user(self,
+                     request: Optional[Request] = None) -> Optional[User]:
         """
         Nothing
 
@@ -62,6 +70,20 @@ class Auth():
             request (Request, optional): Flask Request. Defaults to None.
 
         Returns:
-            Typevar('User'): User from Database or None
+            (User, optional): User from Database or None.
         """
         return (None)
+
+    def session_cookie(self,
+                       request: Optional[Request] = None) -> Optional[str]:
+        """
+        Retrieve the session cookie
+
+        Args:
+            request (Request, optional): HTTP request from the Client.
+            Defaults to None.
+        """
+        if (not request):
+            return (None)
+
+        return (request.cookies.get(getenv("SESSION_NAME") or ""))
