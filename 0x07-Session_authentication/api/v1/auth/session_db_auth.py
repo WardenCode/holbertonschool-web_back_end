@@ -5,7 +5,6 @@ SesionDBAuth module
 
 
 from datetime import datetime, timedelta
-from sys import stderr
 from typing import List
 
 from api.v1.auth.session_exp_auth import SessionExpAuth
@@ -32,9 +31,7 @@ class SessionDBAuth(SessionExpAuth):
         if (not session_id):
             return (None)
 
-        new_session = UserSession(
-            **{'user_id': user_id, 'session_id': session_id}
-        )
+        new_session = UserSession(user_id=user_id, session_id=session_id)
         new_session.save()
         UserSession.save_to_file()
 
@@ -54,16 +51,12 @@ class SessionDBAuth(SessionExpAuth):
             return (None)
 
         UserSession.load_from_file()
-        users: List = UserSession.search({
-            "session_id": session_id
-        })
+        users: List = UserSession.search({"session_id": session_id})
 
         if (not users):
             return (None)
 
-        user = users[0]
-
-        user_id = user.user_id
+        user_id = users[0].user_id
 
         if (not user_id):
             return (None)
@@ -71,7 +64,7 @@ class SessionDBAuth(SessionExpAuth):
         if (self.session_duration <= 0):
             return (user_id)
 
-        created_at = user.created_at
+        created_at = users[0].created_at
 
         if (not created_at):
             return (None)
@@ -107,9 +100,7 @@ class SessionDBAuth(SessionExpAuth):
         if (not user_id):
             return (False)
 
-        user_session = UserSession.search({
-            'session_id': session_cookie
-        })
+        user_session = UserSession.search({'session_id': session_cookie})
 
         if not user_session:
             return (False)
