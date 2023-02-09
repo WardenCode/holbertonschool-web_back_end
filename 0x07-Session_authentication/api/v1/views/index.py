@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """ Module of Index views
 """
-from codecs import strict_errors
-
 from flask import abort, jsonify
 
 from api.v1.views import app_views

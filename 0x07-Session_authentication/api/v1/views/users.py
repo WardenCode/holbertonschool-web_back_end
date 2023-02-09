@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """ Module of Users views
 """
-from sys import stderr
-
 from flask import abort, jsonify, request
 
 from api.v1.views import app_views
