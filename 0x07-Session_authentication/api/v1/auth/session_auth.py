@@ -3,7 +3,7 @@
 Session Auth Module
 """
 
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, Union
 from uuid import uuid4
 
 from api.v1.auth.auth import Auth
@@ -18,7 +18,7 @@ class SessionAuth(Auth):
         Auth (Auth): Main auth class
     """
 
-    user_id_by_session_id: Dict[str, str] = {}
+    user_id_by_session_id: Dict[str, Union[Dict[str, Any], str]] = {}
 
     def create_session(self, user_id: Optional[str] = None) -> Optional[str]:
         """
@@ -84,8 +84,7 @@ class SessionAuth(Auth):
             Defaults to None.
 
         Returns:
-            (bool): True if session is deleted, False
-            otherwise
+            (bool): True if session is deleted, False otherwise
         """
 
         if (not request):
