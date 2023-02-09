@@ -5,7 +5,7 @@
 from os import getenv
 from typing import List, Optional
 
-from flask import jsonify, request
+from flask import abort, jsonify, request
 
 from api.v1.views import app_views
 from models.user import User
@@ -14,7 +14,7 @@ from models.user import User
 @app_views.route('/auth_session/login', methods=["POST"], strict_slashes=False)
 def login():
     """
-    _summary_
+    Self Descriptive
     """
 
     email: Optional[str] = request.form.get("email")
@@ -43,3 +43,17 @@ def login():
             return (response)
 
     return (jsonify({"error": "wrong password"}), 401)
+
+
+@app_views.route('/auth_session/logout',
+                 methods=["DELETE"], strict_slashes=False)
+def logout():
+    """
+    Self Descriptive
+    """
+    from api.v1.app import auth
+
+    if (not auth.destroy_session(request)):
+        abort(404)
+
+    return (jsonify({}), 200)
