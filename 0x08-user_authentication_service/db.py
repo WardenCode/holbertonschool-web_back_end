@@ -70,7 +70,8 @@ class DB:
             Optional[User]: Found User or None otherwise.
         """
 
-        fields: List[str] = [column.key for column in User.__table__.c]
+        # fields: List[str] = [column.key for column in User.__table__.c]
+        fields = ["id", "email", "session_id", "reset_token"]
 
         for key in kwargs.keys():
             if (key not in fields):
