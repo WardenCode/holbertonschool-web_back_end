@@ -5,9 +5,10 @@ App module
 
 from typing import Optional
 
-from flask import Flask, abort, jsonify, request
+from flask import Flask, abort, jsonify, redirect, request, url_for
 
 from auth import Auth
+from user import User
 
 app = Flask(__name__)
 AUTH = Auth()
@@ -55,6 +56,27 @@ def login():
     response.set_cookie("session_id", session_id)
 
     return response
+
+
+@app.route("/sessions", methods=["DELETE"], strict_slashes=False)
+def logout():
+    """
+    logout endpoint
+    """
+
+    session_id = request.cookies.get("session_id")
+
+    if (session_id is None):
+        abort(403)
+
+    found_user: Optional[User] = AUTH.get_user_from_session_id(session_id)
+
+    if (found_user is None):
+        abort(403)
+
+    AUTH.destoy_session(found_user.get("id"))
+
+    return redirect(url_for("/"))
 
 
 if __name__ == "__main__":
