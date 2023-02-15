@@ -3,8 +3,11 @@
 App module
 """
 
+from typing import Optional
+
+from flask import Flask, abort, jsonify, request
+
 from auth import Auth
-from flask import Flask, jsonify, request
 
 app = Flask(__name__)
 AUTH = Auth()
@@ -32,6 +35,26 @@ def create_user():
         return (jsonify({"email": form_data.get("email"), "message": "user created"}))
     except ValueError:
         return (jsonify({"message": "email already registered"}), 400)
+
+
+@app.route("/sessions", methods=["POST"], strict_slashes=False)
+def login():
+    """
+    login / user_sessions endpoint
+    """
+
+    form_data = request.form
+    email = form_data.get("email")
+
+    if not AUTH.valid_login(email, form_data.get("password")):
+        abort(401)
+
+    session_id = AUTH.create_session(email)
+
+    response = jsonify({"email": email, "message": "logged in"})
+    response.set_cookie("session_id", session_id)
+
+    return response
 
 
 if __name__ == "__main__":
