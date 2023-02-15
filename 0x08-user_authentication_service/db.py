@@ -71,11 +71,11 @@ class DB:
         """
 
         # fields: List[str] = [column.key for column in User.__table__.c]
-        fields = ["id", "email", "session_id", "reset_token"]
+        # fields = ["id", "email", "session_id", "reset_token"]
 
-        for key in kwargs.keys():
-            if (key not in fields):
-                raise InvalidRequestError
+        # for key in kwargs.keys():
+        #     if (key not in fields):
+        #         raise InvalidRequestError
 
         requested_user = self._session.query(
             User).filter_by(**kwargs).first()
