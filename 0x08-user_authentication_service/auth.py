@@ -3,8 +3,9 @@
 Auth module
 """
 
-import uuid
+from sys import stderr
 from typing import Optional
+from uuid import uuid4
 
 from bcrypt import checkpw, gensalt, hashpw
 from sqlalchemy.exc import InvalidRequestError
@@ -35,7 +36,7 @@ def _generate_uuid() -> str:
     Returns:
         str: new uuid
     """
-    return str(uuid.uuid4())
+    return str(uuid4())
 
 
 class Auth:
@@ -72,7 +73,7 @@ class Auth:
             raise ValueError("User {:s} already exists".format(email))
 
         registered_user: User = self._db.add_user(
-            email, _hash_password(password).decode("utf-8"))
+            email, _hash_password(password))
 
         return registered_user
 
@@ -94,7 +95,7 @@ class Auth:
             return False
 
         if checkpw(password.encode("utf-8"),
-                   found_user.hashed_password.encode("utf-8")):
+                   found_user.hashed_password):
             return (True)
 
         return (False)
@@ -119,7 +120,10 @@ class Auth:
 
         new_uuid: str = _generate_uuid()
 
-        self._db.update_user(found_user.id, session_id=new_uuid)
+        try:
+            self._db.update_user(found_user.id, session_id=new_uuid)
+        except ValueError:
+            return None
 
         return (new_uuid)
 
@@ -158,6 +162,60 @@ class Auth:
         except (InvalidRequestError, NoResultFound):
             return None
 
-        self._db.update_user(user_id, session_id=None)
+        try:
+            self._db.update_user(user_id, session_id=None)
+        except ValueError:
+            return None
 
         return None
+
+    def get_reset_password_token(self, email: str) -> Optional[str]:
+        """
+        Generate a reset password token for the user
+
+        Args:
+            email (str): user email
+
+        Returns:
+            str: Reset password token
+        """
+
+        found_user: Optional[User] = None
+
+        try:
+            found_user = self._db.find_user_by(email=email)
+        except (InvalidRequestError, NoResultFound):
+            return None
+
+        reset_token: str = _generate_uuid()
+
+        try:
+            self._db.update_user(found_user.id, reset_token=reset_token)
+        except ValueError:
+            return None
+
+        return reset_token
+
+    def update_password(self, reset_token: str, password: str) -> None:
+        """
+        Update user password using a reset_token
+
+        Args:
+            reset_token (str): User reset token
+            password (str): User password
+
+        Raises:
+            ValueError: Reset token doesn't match
+        """
+        found_user: Optional[User] = None
+
+        try:
+            found_user = self._db.find_user_by(reset_token=reset_token)
+        except (InvalidRequestError, NoResultFound):
+            raise ValueError
+
+        try:
+            self._db.update_user(
+                found_user.id, hashed_password=_hash_password(password), reset_token=None)
+        except ValueError:
+            return

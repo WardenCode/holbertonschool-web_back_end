@@ -100,9 +100,11 @@ class DB:
             if (key not in fields):
                 raise ValueError
 
-        user_to_update: Optional[User] = self.find_user_by(id=user_id)
+        user_to_update: Optional[User] = None
 
-        if (user_to_update is None):
+        try:
+            user_to_update = self.find_user_by(id=user_id)
+        except (InvalidRequestError, NoResultFound):
             return
 
         for key, value in kwargs.items():
