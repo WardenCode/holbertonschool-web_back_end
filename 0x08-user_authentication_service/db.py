@@ -6,14 +6,13 @@ DB module
 from typing import List, Optional
 
 from sqlalchemy import create_engine
-from sqlalchemy.exc import InvalidRequestError  # delete later
+from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.orm.exc import NoResultFound  # delete later
+from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.orm.session import Session
-from user import Base, User
 
-# from sqlalchemy.orm.exc import NoResultFound, InvalidRequestError # After delte use this
+from user import Base, User
 
 
 class DB:

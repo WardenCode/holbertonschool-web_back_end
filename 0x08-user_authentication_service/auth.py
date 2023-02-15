@@ -9,7 +9,6 @@ from typing import Optional
 from bcrypt import checkpw, gensalt, hashpw
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
-from this import d
 
 from db import DB
 from user import User
