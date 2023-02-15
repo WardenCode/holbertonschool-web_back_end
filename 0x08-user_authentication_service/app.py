@@ -3,9 +3,9 @@
 App module
 """
 
-from sys import stderr
 from typing import Optional
 
+import flask
 from auth import Auth
 from flask import Flask, abort, jsonify, redirect, request
 from user import User
@@ -19,7 +19,7 @@ def welcome_page():
     """
     Route to welcome page
     """
-    return jsonify({"message": "Bienvenue"})
+    return flask.jsonify({"message": "Bienvenue"})
 
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
@@ -134,4 +134,4 @@ def update_password():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    app.run(host="0.0.0.0", port=5000)
