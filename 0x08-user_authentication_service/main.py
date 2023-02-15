@@ -8,7 +8,7 @@ from typing import Dict
 from requests import Response, delete, get, post, put
 
 BASE_URL = "http://localhost:5000/"
-EMAIL = "guillaume@holberton.coms"
+EMAIL = "guillaume@holberton.io"
 PASSWD = "b4l0u"
 NEW_PASSWD = "t4rt1fl3tt3"
 
