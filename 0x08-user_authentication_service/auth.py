@@ -3,7 +3,6 @@
 Auth module
 """
 
-from sys import stderr
 from typing import Optional
 from uuid import uuid4
 
@@ -67,6 +66,8 @@ class Auth:
                 email=email)
         except NoResultFound:
             pass
+        except InvalidRequestError:
+            raise ValueError("User {:s} already exists".format(email))
 
         if (is_already_registered):
             raise ValueError("User {:s} already exists".format(email))
