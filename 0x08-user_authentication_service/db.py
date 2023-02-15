@@ -67,11 +67,10 @@ class DB:
             NoResultFound: User not found
 
         Returns:
-            Optional[User]: Found User or None otherwise.
+            User: Found User.
         """
 
         fields: List[str] = [column.key for column in User.__table__.c]
-        # fields = ["id", "email", "session_id", "reset_token"]
 
         for key in kwargs.keys():
             if (key not in fields):
@@ -102,12 +101,11 @@ class DB:
             if (key not in fields):
                 raise ValueError
 
-        user_to_update: Optional[User] = None
-
         try:
-            user_to_update = self.find_user_by(id=user_id)
+            user_to_update: User = self.find_user_by(id=user_id)
         except (InvalidRequestError, NoResultFound):
-            return
+            raise ValueError
+            # return
 
         for key, value in kwargs.items():
             setattr(user_to_update, key, value)
