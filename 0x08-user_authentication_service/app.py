@@ -5,7 +5,7 @@ App module
 
 from typing import Optional
 
-import flask
+# import flask
 from auth import Auth
 from flask import Flask, abort, jsonify, redirect, request
 from user import User
@@ -19,7 +19,7 @@ def welcome_page():
     """
     Route to welcome page
     """
-    return flask.jsonify({"message": "Bienvenue"})
+    return jsonify({"message": "Bienvenue"})
 
 
 @app.route("/users", methods=["POST"], strict_slashes=False)
