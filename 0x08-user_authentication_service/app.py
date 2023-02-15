@@ -6,9 +6,8 @@ App module
 from sys import stderr
 from typing import Optional
 
-from flask import Flask, abort, jsonify, redirect, request
-
 from auth import Auth
+from flask import Flask, abort, jsonify, redirect, request
 from user import User
 
 app = Flask(__name__)
@@ -33,7 +32,10 @@ def create_user():
     try:
         AUTH.register_user(form_data.get("email", ""),
                            form_data.get("password", ""))
-        return (jsonify({"email": form_data.get("email"), "message": "user created"}))
+        return jsonify({
+            "email": form_data.get("email"),
+            "message": "user created"
+        })
     except ValueError:
         return (jsonify({"message": "email already registered"}), 400)
 

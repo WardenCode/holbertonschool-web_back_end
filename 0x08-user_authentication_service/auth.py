@@ -8,10 +8,9 @@ from typing import Optional
 from uuid import uuid4
 
 from bcrypt import checkpw, gensalt, hashpw
+from db import DB
 from sqlalchemy.exc import InvalidRequestError
 from sqlalchemy.orm.exc import NoResultFound
-
-from db import DB
 from user import User
 
 
@@ -127,7 +126,8 @@ class Auth:
 
         return (new_uuid)
 
-    def get_user_from_session_id(self, session_id: Optional[str]) -> Optional[User]:
+    def get_user_from_session_id(self,
+                                 session_id: Optional[str]) -> Optional[User]:
         """
         Get a User instance corresponding to session_id
 
@@ -216,6 +216,8 @@ class Auth:
 
         try:
             self._db.update_user(
-                found_user.id, hashed_password=_hash_password(password), reset_token=None)
+                found_user.id,
+                hashed_password=_hash_password(password),
+                reset_token=None)
         except ValueError:
             return
