@@ -105,7 +105,6 @@ class DB:
             user_to_update: User = self.find_user_by(id=user_id)
         except (InvalidRequestError, NoResultFound):
             raise ValueError
-            # return
 
         for key, value in kwargs.items():
             setattr(user_to_update, key, value)
