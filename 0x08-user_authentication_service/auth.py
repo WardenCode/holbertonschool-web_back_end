@@ -151,7 +151,7 @@ class Auth:
 
         return found_user
 
-    def destoy_session(self, user_id: int) -> None:
+    def destroy_session(self, user_id: int) -> None:
         """
         Search a session through user_id and destroy it
 
