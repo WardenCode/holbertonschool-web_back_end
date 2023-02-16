@@ -120,14 +120,16 @@ def update_password():
     """
     form_data = request.form
     reset_token = form_data.get("reset_token")
+    email = form_data.get("email")
+    new_password = form_data.get("new_password")
 
     try:
-        AUTH.update_password(reset_token, form_data.get("new_password"))
+        AUTH.update_password(reset_token, new_password)
     except Exception:
         abort(403)
 
     return (jsonify({
-        "email": form_data.get("email"),
+        "email": email,
         "message": "Password updated"
     }), 200)
 
