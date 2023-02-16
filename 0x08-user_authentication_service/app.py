@@ -27,16 +27,18 @@ def create_user():
     Create user endpoint
     """
     form_data = request.form
+    email = form_data.get("email")
 
     try:
-        AUTH.register_user(form_data.get("email", ""),
-                           form_data.get("password", ""))
-        return jsonify({
-            "email": form_data.get("email"),
-            "message": "user created"
-        })
+        AUTH.register_user(email,
+                           form_data.get("password"))
     except ValueError:
         return (jsonify({"message": "email already registered"}), 400)
+
+    return jsonify({
+        "email": email,
+        "message": "user created"
+    })
 
 
 @app.route("/sessions", methods=["POST"], strict_slashes=False)
