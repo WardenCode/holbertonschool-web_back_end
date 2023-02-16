@@ -165,12 +165,15 @@ class Auth:
 
         return None
 
-    def get_reset_password_token(self, email: str) -> Optional[str]:
+    def get_reset_password_token(self, email: str) -> str:
         """
         Generate a reset password token for the user
 
         Args:
             email (str): user email
+
+        Raises:
+            ValueError
 
         Returns:
             str: Reset password token
@@ -180,17 +183,11 @@ class Auth:
 
         try:
             found_user = self._db.find_user_by(email=email)
-        except (InvalidRequestError, NoResultFound):
-            return None
+            self._db.update_user(found_user.id, reset_token=_generate_uuid())
+        except (InvalidRequestError, NoResultFound, ValueError):
+            raise ValueError
 
-        reset_token: str = _generate_uuid()
-
-        try:
-            self._db.update_user(found_user.id, reset_token=reset_token)
-        except ValueError:
-            return None
-
-        return reset_token
+        return found_user.reset_token
 
     def update_password(self, reset_token: str, password: str) -> None:
         """
