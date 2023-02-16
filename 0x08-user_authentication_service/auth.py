@@ -159,11 +159,6 @@ class Auth:
             user_id (int): UserID
         """
         try:
-            self._db.find_user_by(user_id=user_id)
-        except (InvalidRequestError, NoResultFound):
-            return None
-
-        try:
             self._db.update_user(user_id, session_id=None)
         except ValueError:
             return None
