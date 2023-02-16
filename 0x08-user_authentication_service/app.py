@@ -5,7 +5,6 @@ App module
 
 from typing import Optional
 
-# import flask
 from auth import Auth
 from flask import Flask, abort, jsonify, redirect, request
 from user import User
