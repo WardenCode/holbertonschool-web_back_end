@@ -150,7 +150,7 @@ def update_password(email: str, reset_token: str, new_password: str) -> None:
         "new_password": new_password,
     }
 
-    response: Response = put("{:s}update_password".format(BASE_URL), data)
+    response: Response = put("{:s}reset_password".format(BASE_URL), data)
 
     assert response.status_code == 200
 
