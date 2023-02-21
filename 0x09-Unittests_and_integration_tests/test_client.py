@@ -70,8 +70,13 @@ class TestGithubOrgClient(TestCase):
             res_url (str): Test url response
             mock (Mock): Generated mock of get_json
         """
-        client = GithubOrgClient(org_name)
-        self.assertEqual(client._public_repos_url, res_url)
+
+        with patch('client.GithubOrgClient._public_repos_url',
+                   new_callable=PropertyMock(return_value={
+                       "repos_url": res_url
+                   })) as _:
+            client = GithubOrgClient(org_name)
+            self.assertEqual(client._public_repos_url, {"repos_url": res_url})
 
     @parameterized.expand([
         ({"license": {"key": "my_license"}}, "my_license", True),
