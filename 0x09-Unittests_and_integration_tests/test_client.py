@@ -55,27 +55,21 @@ class TestGithubOrgClient(TestCase):
             res = GithubOrgClient(name)._public_repos_url
             self.assertEqual(res, res_url.get("repos_url"))
 
-    @parameterized.expand([
-        ("example_url", "https://example.com/repos")
-    ])
     @patch('client.get_json',
            return_value={"repos_url": "https://example.com/repos"})
-    def test_public_repos(self, org_name: str,
-                          res_url: str, mock: Mock) -> None:
+    def test_public_repos(self, mock: Mock) -> None:
         """
         Test "_public_repos_url" private method
 
         Args:
-            org_name (str): Test org_name
-            res_url (str): Test url response
             mock (Mock): Generated mock of get_json
         """
         mock()
         with patch('client.GithubOrgClient._public_repos_url',
                    new_callable=PropertyMock) as _mock:
-            _mock.return_value = res_url
-            client = GithubOrgClient(org_name)
-            self.assertEqual(client._public_repos_url, res_url)
+            _mock.return_value = {"repos_url": "https://example.com/repos"}
+            client = GithubOrgClient("example_url")
+            self.assertEqual(client._public_repos_url, _mock.return_value)
             mock.assert_called_once()
             _mock.assert_called_once()
 
