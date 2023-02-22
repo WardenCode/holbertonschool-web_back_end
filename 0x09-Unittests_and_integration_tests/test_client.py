@@ -113,8 +113,8 @@ class TestIntegrationGithubOrgClient(TestCase):
         For setup the integration test
         """
         cls.get_patcher = patch("requests.get")
-        cls.mc = cls.get_patcher.start()
-        cls.mc.return_value.json.side_effect = [
+        cls.mock = cls.get_patcher.start()
+        cls.mock.return_value.json.side_effect = [
             cls.org_payload, cls.repos_payload,
             cls.org_payload, cls.repos_payload
         ]
@@ -141,4 +141,4 @@ class TestIntegrationGithubOrgClient(TestCase):
         """
         client = GithubOrgClient("Integration test with license")
         self.assertEqual(client.public_repos(
-            "apache-2.0"), self.apache2_repos)
+            license="apache-2.0"), self.apache2_repos)
