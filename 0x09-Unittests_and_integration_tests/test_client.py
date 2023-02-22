@@ -134,6 +134,7 @@ class TestIntegrationGithubOrgClient(TestCase):
         client = GithubOrgClient("Integration test")
         self.assertEqual(client.org, self.org_payload)
         self.assertEqual(client.repos_payload, self.repos_payload)
+        self.assertEqual(client.public_repos(), self.expected_repos)
 
     def test_public_repos_with_license(self) -> None:
         """
