@@ -20,8 +20,8 @@ class Config(object):
 
 
 app.config.from_object(Config)
-babel.default_locale = 'en'
-babel.default_timezone = 'UTC'
+Babel.default_locale = 'en'
+Babel.default_timezone = 'UTC'
 
 
 @babel.localeselector
