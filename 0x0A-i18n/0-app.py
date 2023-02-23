@@ -11,7 +11,7 @@ app = Flask(__name__)
 @app.route('/', strict_slashes=False)
 def main_page():
     """
-    _summary_
+    Endpoint for the main page
     """
     return (render_template('0-index.html'))
 
