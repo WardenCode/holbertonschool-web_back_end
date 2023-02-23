@@ -21,8 +21,8 @@ class Config(object):
 
 app.config.from_object(Config)
 
-Babel.default_locale = 'en'
-Babel.default_timezone = 'UTC'
+babel.default_locale = 'en'
+babel.default_timezone = 'UTC'
 
 
 @babel.localeselector
