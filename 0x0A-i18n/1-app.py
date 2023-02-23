@@ -16,9 +16,9 @@ class Config(object):
     """
     Config class for languages
     """
-    LANGUAGES: List[str] = ["en", "fr"]
-    BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'UTC'
+    LANGUAGES: List[str] = ['en', 'fr']
+    BABEL_DEFAULT_LOCALE: str = 'en'
+    BABEL_DEFAULT_TIMEZONE: str = 'UTC'
 
 
 app.config.from_object(Config)
