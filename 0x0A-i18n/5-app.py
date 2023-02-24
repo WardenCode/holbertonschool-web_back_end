@@ -63,7 +63,7 @@ def get_locale() -> Optional[str]:
     if language:
         return language
 
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return request.accept_languages.best_match(Config.LANGUAGES)
 
 
 @app.before_request
@@ -72,7 +72,9 @@ def before_all():
     Validate if login_as query param
     matches with a user
     """
-    g.user = get_user()
+    user = get_user()
+    g.user = user
+    # g.user = get_user()
 
 
 @app.route('/', strict_slashes=False)
