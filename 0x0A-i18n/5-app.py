@@ -60,14 +60,15 @@ def get_locale() -> Optional[str]:
         Optional[str]: The best match in LANGUAGES variable
     """
     language: Optional[str] = request.args.get("locale")
-    if language:
+
+    if language and (language in Config.LANGUAGES):
         return language
 
     return request.accept_languages.best_match(Config.LANGUAGES)
 
 
 @app.before_request
-def before_all():
+def before_request():
     """
     Validate if login_as query param
     matches with a user
