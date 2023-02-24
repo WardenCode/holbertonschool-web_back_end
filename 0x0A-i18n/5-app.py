@@ -75,7 +75,6 @@ def before_request():
     """
     user = get_user()
     g.user = user
-    # g.user = get_user()
 
 
 @app.route('/', strict_slashes=False)
@@ -87,4 +86,4 @@ def main_page():
 
 
 if (__name__ == '__main__'):
-    app.run(debug=True)
+    app.run()
