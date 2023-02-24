@@ -5,7 +5,7 @@
 
 from typing import List, Optional
 
-from flask import Flask, g, render_template, request
+from flask import Flask, render_template, request
 from flask_babel import Babel
 
 app = Flask(__name__)
@@ -46,7 +46,7 @@ def main_page():
     """
     Endpoint for the main page
     """
-    return (render_template('3-index.html'))
+    return (render_template('4-index.html'))
 
 
 if (__name__ == '__main__'):
