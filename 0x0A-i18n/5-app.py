@@ -68,6 +68,10 @@ def get_locale() -> Optional[str]:
 
 @app.before_request
 def before_all():
+    """
+    Validate if login_as query param
+    matches with a user
+    """
     g.user = get_user()
 
 
