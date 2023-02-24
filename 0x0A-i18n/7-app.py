@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-6. Use user locale
+7. Infer appropriate time zone
 """
 
-from typing import Dict, List, Optional, Union
+from typing import Dict, List, Optional
 
 from flask import Flask, g, render_template, request
 from flask_babel import Babel
@@ -78,32 +78,29 @@ def get_locale() -> Optional[str]:
 
 
 @babel.timezoneselector
-def get_timezone():
+def get_timezone() -> str:
     """
     Get the best match in timezone variable or
     use the timezone of the user.
 
     Returns:
-        _UTCclass | StaticTzInfo | DstTzInfo: The best match in timezone
+        str: The best match in timezone
     """
-    selected_timezone = 'UTC'
-    query_timezone: Optional[str] = request.args.get("timezone")
-    user_timezone: Optional[str] = g.user.get('timezone')
-    header_timezone: Optional[str] = request.headers.get('timezone')
+    time: str = "UTC"
 
-    if query_timezone:
-        selected_timezone = query_timezone
-    elif user_timezone:
-        selected_timezone = user_timezone
-    elif header_timezone:
-        selected_timezone = header_timezone
+    if request.args and request.args.get("timezone"):
+        time = request.args["timezone"]
+    elif g.user and g.user.get("timezone"):
+        time = g.user["timezone"]
+    else:
+        time = app.config["BABEL_DEFAULT_TIMEZONE"]
 
     try:
-        selected_timezone = timezone(selected_timezone)
+        timezone(time)
     except UnknownTimeZoneError:
-        pass
+        time = "UTC"
 
-    return selected_timezone
+    return time
 
 
 @app.before_request
