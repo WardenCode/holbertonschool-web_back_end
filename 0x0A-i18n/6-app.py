@@ -60,7 +60,7 @@ def get_locale() -> Optional[str]:
         Optional[str]: The best match in LANGUAGES variable
     """
     language: Optional[str] = request.args.get("locale")
-    if language and (language in Config.LANGUAGES):
+    if language:
         return language
 
     return request.accept_languages.best_match(app.config['LANGUAGES'])
