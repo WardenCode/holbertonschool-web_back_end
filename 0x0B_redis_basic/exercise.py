@@ -4,10 +4,66 @@ Definition of Cache Class
 """
 
 from functools import wraps
-from typing import Callable, Optional, Union
+from typing import Callable, List, Optional, Union
 from uuid import uuid4
 
 from redis import Redis
+
+
+def replay(method: Callable):
+    """
+    Shows the times that a method was called
+    as a replay
+
+    Args:
+        method (Callable): Method to be replaied
+    """
+    db: Redis = Redis()
+    key: str = method.__qualname__
+
+    input_key: str = "{}:inputs".format(key)
+    output_key: str = "{}:outputs".format(key)
+
+    inputs: List[bytes] = db.lrange(input_key, 0, -1)
+    outputs: List[bytes] = db.lrange(output_key, 0, -1)
+
+    count: str = db.get(key).decode('utf-8')
+
+    print("{} was called {} times:".format(key, count))
+
+    for input, output in zip(inputs, outputs):
+        input = input.decode('utf-8')
+        output = output.decode('utf-8')
+        print("{}(*{}) -> {}".format(key, input, output))
+
+
+def call_history(method: Callable) -> Callable:
+    """
+    Decorator that saves the call history of a given method
+    saves on redis, a list of a input and output of the method
+
+    Args:
+        method (Callable): Method to be decorated
+
+    Returns:
+        Callable: Wrapped Method
+    """
+    key: str = method.__qualname__
+    input_key: str = "{}:inputs".format(key)
+    output_key: str = "{}:outputs".format(key)
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        """
+        Wrapper that saves the history on redis
+        inputs and outputs
+        """
+        self._redis.rpush(input_key, str(args))
+        res = method(self, *args, **kwargs)
+        self._redis.rpush(output_key, res)
+        return res
+
+    return wrapper
 
 
 def count_calls(method: Callable) -> Callable:
@@ -18,6 +74,10 @@ def count_calls(method: Callable) -> Callable:
 
     @wraps(method)
     def wrapper(self, *args, **kwargs):
+        """
+        Logig of the decorator that counts
+        the times that a method is called
+        """
         self._redis.incr(method.__qualname__)
         return method(self, *args, **kwargs)
 
@@ -36,6 +96,7 @@ class Cache:
         self._redis: Redis = Redis()
         self._redis.flushdb()
 
+    @call_history
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
@@ -48,6 +109,7 @@ class Cache:
         Returns:
             str: Key of the data
         """
+
         key: str = str(uuid4())
         self._redis.set(key, data)
         return key
