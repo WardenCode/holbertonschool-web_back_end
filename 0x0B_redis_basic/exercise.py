@@ -3,10 +3,25 @@
 Definition of Cache Class
 """
 
+from functools import wraps
 from typing import Callable, Optional, Union
 from uuid import uuid4
 
 from redis import Redis
+
+
+def count_calls(method: Callable) -> Callable:
+    """
+    Decorator to count the times that
+    a method is called
+    """
+
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        self._redis.incr(method.__qualname__)
+        return method(self, *args, **kwargs)
+
+    return wrapper
 
 
 class Cache:
@@ -21,6 +36,7 @@ class Cache:
         self._redis: Redis = Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Saves a data with a random key
@@ -34,9 +50,9 @@ class Cache:
         """
         key: str = str(uuid4())
         self._redis.set(key, data)
-        return (key)
+        return key
 
-    def get(self, key: str, fn: Optional[Callable]):
+    def get(self, key: str, fn: Optional[Callable] = None):
         """
         Get the data saved on Redis, with a given key
 
@@ -47,8 +63,8 @@ class Cache:
         """
         data = self._redis.get(key)
         if (fn and data):
-            return (fn(data))
-        return (data)
+            return fn(data)
+        return data
 
     def get_str(self, key: str) -> Optional[str]:
         """
@@ -63,7 +79,7 @@ class Cache:
             Optional[str]: Return the value of
             the key as a string
         """
-        return (self.get(key, str))
+        return self.get(key, str)
 
     def get_int(self, key: str) -> Optional[int]:
         """
@@ -78,4 +94,4 @@ class Cache:
             Optional[int]: Return the value of
             the key as a int
         """
-        return (self.get(key, int))
+        return self.get(key, int)
