@@ -64,10 +64,3 @@ def get_page(url: str) -> str:
         str: HTML content of the URL
     """
     return get(url).text
-
-
-if __name__ == '__main__':
-    url = "https://www.google.com"
-
-    # get_page("https://redis.io/commands/")
-    get_page(url)
