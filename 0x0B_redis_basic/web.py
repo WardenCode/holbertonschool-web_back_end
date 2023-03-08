@@ -44,7 +44,7 @@ def count_times_requested_url(func: Callable) -> Callable:
         url_counter_key: str = "count:{}".format(url)
         response = func(url)
 
-        print(db.incr(url_counter_key))
+        db.incr(url_counter_key)
         db.set(cached_url, response)
         db.expire(cached_url, 10)
         return response
