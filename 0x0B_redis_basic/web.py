@@ -1,66 +1,41 @@
 #!/usr/bin/env python3
 """
-Implementing an expiring web cache and tracker
+Web file
 """
-
 from functools import wraps
-from typing import Callable, Optional
 
-from redis import Redis
-from requests import get
+import redis
+import requests
 
-db: Redis = Redis()
+store = redis.Redis()
 
 
-def count_times_requested_url(func: Callable) -> Callable:
+def count_url_access(method):
     """
-    Count the times that an url was requested,
-    and save on cache the HTML Content
-
-    Args:
-        func (Callable): Function to be decorated
-
-    Returns:
-        Callable: Wrapper
+    Decorator counting how many times
+    a Url is accessed
     """
+    @wraps(method)
+    def wrapper(url):
+        cached_key = "cached:" + url
+        cached_data = store.get(cached_key)
+        if cached_data:
+            return cached_data.decode("utf-8")
 
-    @wraps(func)
-    def wrapper(url: str) -> str:
-        """
-        Logic of the decorator
+        count_key = "count:" + url
+        html = method(url)
 
-        Args:
-            url (str): URL to the page
-
-        Returns:
-            str: HTML content of the page
-        """
-        cached_url: str = "saved:{}".format(url)
-        cached_reponse: Optional[bytes] = db.get(cached_url)
-
-        if cached_reponse:
-            return cached_reponse.decode("utf-8")
-
-        url_counter_key: str = "count:{}".format(url)
-        response = func(url)
-
-        db.incr(url_counter_key)
-        db.set(cached_url, response)
-        db.expire(cached_url, 10)
-        return response
-
+        store.incr(count_key)
+        store.set(cached_key, html)
+        store.expire(cached_key, 10)
+        return html
     return wrapper
 
 
-@count_times_requested_url
+@count_url_access
 def get_page(url: str) -> str:
     """
-    Retrieve the HTML content of a particular UR.
-
-    Args:
-        url (str): URL to get the page
-
-    Returns:
-        str: HTML content of the URL
+    Returns HTML content of a url
     """
-    return get(url).text
+    res = requests.get(url)
+    return res.text
