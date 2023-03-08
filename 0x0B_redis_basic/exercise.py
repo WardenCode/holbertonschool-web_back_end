@@ -3,11 +3,11 @@
 Definition of Cache Class
 """
 
+import uuid
 from functools import wraps
 from typing import Callable, List, Optional, Union
-from uuid import uuid4
 
-from redis import Redis
+import redis
 
 
 def replay(method: Callable):
@@ -18,7 +18,7 @@ def replay(method: Callable):
     Args:
         method (Callable): Method to be replaied
     """
-    db: Redis = Redis()
+    db: redis.Redis = redis.Redis()
     key: str = method.__qualname__
 
     input_key: str = "{}:inputs".format(key)
@@ -93,7 +93,7 @@ class Cache:
         """
         Constructor of Cache class
         """
-        self._redis: Redis = Redis()
+        self._redis: redis.Redis = redis.Redis()
         self._redis.flushdb()
 
     @call_history
@@ -109,8 +109,7 @@ class Cache:
         Returns:
             str: Key of the data
         """
-
-        key: str = str(uuid4())
+        key: str = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
 
@@ -124,7 +123,7 @@ class Cache:
             function to convert the type of the data
         """
         data = self._redis.get(key)
-        if (fn and data):
+        if (fn):
             return fn(data)
         return data
 
