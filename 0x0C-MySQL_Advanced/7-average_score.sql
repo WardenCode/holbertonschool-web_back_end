@@ -2,6 +2,7 @@
 -- that computes and store the average score for a student.
 
 DELIMITER $$
+DROP PROCEDURE IF EXISTS ComputeAverageScoreForUser;
 
 CREATE PROCEDURE ComputeAverageScoreForUser (IN user_id INT)
 BEGIN
@@ -15,7 +16,7 @@ BEGIN
 
     UPDATE users
     SET average_score = average
-    WHERE users.id = user_id;
+    WHERE id = user_id;
 END $$
 
 DELIMITER ;
