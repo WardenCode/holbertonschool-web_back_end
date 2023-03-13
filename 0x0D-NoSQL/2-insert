@@ -1,0 +1,3 @@
+// Create a colecction and insert a document inside it
+db.createCollection("school")
+db.school.insertOne({name: "Holberton school"})
