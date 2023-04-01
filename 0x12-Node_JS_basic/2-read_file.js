@@ -15,17 +15,17 @@ function countStudents(path) {
 
   for (let i = 1; i < students.length; i += 1) {
     const student = students[i];
-    if (!student) continue;
+    if (student) {
+      const [firstName, , , field] = students[i].split(',');
 
-    const [firstName, , , field] = students[i].split(',');
+      if (studentsOnFields[field]) {
+        studentsOnFields[field].push(firstName);
+      } else {
+        studentsOnFields[field] = [firstName];
+      }
 
-    if (studentsOnFields[field]) {
-      studentsOnFields[field].push(firstName);
-    } else {
-      studentsOnFields[field] = [firstName];
+      numberOfStudents += 1;
     }
-
-    numberOfStudents += 1;
   }
 
   console.log(`Number of students ${numberOfStudents}`);
