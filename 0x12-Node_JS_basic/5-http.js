@@ -17,8 +17,8 @@ const requestListener = async (req, res) => {
     res.write('This is the list of our students\n');
 
     await countStudents(argv[2])
-      .then((msg) => res.write(msg))
-      .catch(({ message }) => res.write(message));
+      .then((msg) => res.end(msg))
+      .catch(({ message }) => res.end(message));
   }
 
   res.end();
