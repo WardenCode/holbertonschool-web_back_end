@@ -1,4 +1,5 @@
 const http = require('http');
+const { argv } = require('process');
 const countStudents = require('./3-read_file_async');
 
 const host = 'localhost';
@@ -12,15 +13,14 @@ const requestListener = (req, res) => {
 
   if (url === '/') {
     res.write('Hello Holberton School!');
+    res.end();
   } else if (url === '/students') {
     res.write('This is the list of our students\n');
 
-    countStudents('database.csv')
+    countStudents(argv[2])
       .then((msg) => res.end(msg))
-      .catch((err) => res.end(err.message));
+      .catch(({ message }) => res.end(message));
   }
-
-  res.end();
 };
 
 const app = http.createServer(requestListener);
