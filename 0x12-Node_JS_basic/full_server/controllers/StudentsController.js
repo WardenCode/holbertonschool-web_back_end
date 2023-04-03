@@ -1,8 +1,8 @@
 import readDatabase from '../utils';
 
 class StudentsController {
-  static getAllStudents(req, res) {
-    readDatabase(process.argv[2])
+  static getAllStudents(request, response, path) {
+    readDatabase(path)
       .then((table) => {
         const fields = ['This is the list of our students'];
 
@@ -12,22 +12,22 @@ class StudentsController {
           }
         }
 
-        res.status(200).send(fields.join('\n'));
+        response.status(200).send(fields.join('\n'));
       })
-      .catch(() => res.status(500).send('Cannot load the database'));
+      .catch(() => response.status(500).send('Cannot load the database'));
   }
 
-  static getAllStudentsByMajor(req, res) {
-    const { major } = req.params;
+  static getAllStudentsByMajor(request, response, path) {
+    const { major } = request.params;
 
     if (!['CS', 'SWE'].includes(major)) {
-      res.status(500).send('Major parameter must be CS or SWE');
+      response.status(500).send('Major parameter must be CS or SWE');
       return;
     }
 
-    readDatabase(process.argv[2])
-      .then((table) => res.status(200).send(`List: ${table[major].join(', ')}`))
-      .catch(() => res.status(500).send('Cannot load the database'));
+    readDatabase(path)
+      .then((table) => response.status(200).send(`List: ${table[major].join(', ')}`))
+      .catch(() => response.status(500).send('Cannot load the database'));
   }
 }
 

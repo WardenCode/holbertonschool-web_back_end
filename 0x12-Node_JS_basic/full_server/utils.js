@@ -5,19 +5,19 @@ function readDatabase(path) {
     .then((content) => content.split('\n'))
     .then((data) => {
       const students = data.map((student) => student.split(','));
-      const result = {};
+      const fields = {};
 
       for (let i = 1; i < students.length; i += 1) {
         if (students[i].length === 4) {
           const [firstName, , , field] = students[i];
-          if (!result[field]) result[field] = [firstName];
-          else result[field].push(firstName);
+          if (!fields[field]) fields[field] = [firstName];
+          else fields[field].push(firstName);
         }
       }
 
-      return result;
+      return fields;
     })
-    .catch(() => Error('Cannot load the database'));
+    .catch((err) => Error(err));
 }
 
 export default readDatabase;
