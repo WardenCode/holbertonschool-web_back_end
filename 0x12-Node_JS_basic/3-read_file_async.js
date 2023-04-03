@@ -7,6 +7,8 @@ function countStudents(path) {
     .then((students) => {
       let numberOfStudents = 0;
       const studentsOnFields = {};
+      const logs = [];
+      let finalText = '';
 
       for (let i = 1; i < students.length; i += 1) {
         const student = students[i];
@@ -23,10 +25,16 @@ function countStudents(path) {
         }
       }
 
-      console.log(`Number of students: ${numberOfStudents}`);
+      logs.push(`Number of students: ${numberOfStudents}`);
       for (const [key, value] of Object.entries(studentsOnFields)) {
-        console.log(`Number of students in ${key}: ${value.length}. List: ${value.join(', ')}`);
+        logs.push(`Number of students in ${key}: ${value.length}. List: ${value.join(', ')}`);
       }
+
+      finalText = logs.join('\n');
+
+      console.log(finalText);
+
+      return (finalText);
     })
     .catch(() => {
       throw new Error('Cannot load the database');
