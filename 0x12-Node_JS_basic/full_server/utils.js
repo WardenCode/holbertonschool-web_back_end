@@ -1,7 +1,8 @@
-import { readFile } from 'fs/promises';
+const fs = require('fs').promises;
 
 function readDatabase(path) {
-  return readFile(path, 'utf-8')
+  return fs
+    .readFile(path, 'utf-8')
     .then((content) => content.split('\n'))
     .then((data) => {
       const students = data.map((student) => student.split(','));
