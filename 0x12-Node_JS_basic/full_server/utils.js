@@ -18,7 +18,9 @@ function readDatabase(path) {
 
       return fields;
     })
-    .catch((err) => Error(err));
+    .catch((err) => {
+      throw new Error(err);
+    });
 }
 
 export default readDatabase;
