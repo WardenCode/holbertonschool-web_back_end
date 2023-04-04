@@ -30,9 +30,11 @@ function countStudents(path) {
         logs.push(`Number of students in ${key}: ${value.length}. List: ${value.join(', ')}`);
       }
 
-      finalText = logs.join('\n');
+      for (const log of logs) {
+        console.log(log);
+      }
 
-      console.log(finalText);
+      finalText = logs.join('\n');
 
       return (finalText);
     })
