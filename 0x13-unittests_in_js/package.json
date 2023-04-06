@@ -1,0 +1,21 @@
+{
+  "name": "0x13-unittests_in_js",
+  "version": "1.0.0",
+  "description": "JavaScript Holberton's project to practice unit testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "Node.js",
+    "testing",
+    "mocha"
+  ],
+  "author": "Diego Linares",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "sinon": "^15.0.3"
+  }
+}
