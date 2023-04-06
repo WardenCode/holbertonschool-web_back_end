@@ -1,4 +1,4 @@
-const { spy, stub } = require('sinon');
+const sinon = require('sinon');
 
 const sendPaymentRequestToApi = require('./3-payment');
 const utils = require('./utils');
@@ -6,8 +6,8 @@ const { expect } = require('chai');
 
 describe('Test sendPaymentRequestToApi function', () => {
   it('Test the console output', () => {
-    const moduleStub = stub(utils, 'calculateNumber');
-    const consoleSpy = spy(console, 'log');
+    const moduleStub = sinon.stub(utils, 'calculateNumber');
+    const consoleSpy = sinon.spy(console, 'log');
 
     moduleStub.returns(10);
 
